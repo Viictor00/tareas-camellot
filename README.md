@@ -9,16 +9,11 @@ Skill para que Claude genere fichas de tareas de fútbol con el formato de la pl
 - Monta el PDF con la misma geometría, colores y maquetación que el original.
 - Puede meter las fichas a página completa dentro de un documento más grande, como un microciclo o un proyecto.
 
-## Qué tienes que aportar tú
+## Qué incluye
 
-Este repositorio **no incluye material de la plataforma** (logos, fondos ni fichas). Cuando uses la skill, Claude te pedirá:
+La skill lleva todo el material para hacer los gráficos y la ficha: plantilla (cabecera y bandas), fondos limpios (campo entero, medio campo y cuadrado), fichas (jugadores/as rojo, amarillo, azul y negro, balón, cono y miniportería) y la fuente. Solo hay que darle la tarea: una captura, un dibujo o una descripción.
 
-1. Un PDF de ejemplo exportado de Camellot (una "Entrega Ejercicio" y, si vas a hacer sesiones, una "Entrega Sesión").
-2. Capturas PNG de los 3 fondos: campo entero, medio campo y cuadrado libre.
-3. Capturas PNG de las fichas sobre el verde de la app: jugador/a rojo, amarillo, azul y negro (portero/a), balón, conos, pica, valla, escalera, miniportería y portería.
-4. La tarea que quieres pasar al formato: una captura, un dibujo o una descripción.
-
-Consejo: guárdalo todo en una carpeta `Camellot` para reutilizarlo.
+Faltan por recortar la portería grande, el cono grande, la pica, la valla, la escalera y el maniquí: se añaden desde una captura o una ficha exportada con `scripts/extraer_recursos.py`.
 
 ## Instalación
 
@@ -39,10 +34,20 @@ Copia la carpeta `tareas-camellot/` en `~/.claude/skills/` (para todos tus proye
 
 ```
 tareas-camellot/
-└── SKILL.md            # instrucciones de la skill
-tareas-camellot.zip     # la misma carpeta comprimida, lista para subir a Claude
+├── SKILL.md                    # instrucciones de la skill
+├── plantilla/                  # cabecera y bandas rojas + una ficha exportada de ejemplo
+├── fondos/                     # campo entero, medio campo (+ máscara) y cuadrado
+├── fichas/                     # jugadores/as, balón, cono, miniportería
+├── fuentes/                    # Figtree Regular
+└── scripts/
+    ├── camellot.py             # Lienzo (dibujo sobre los fondos) y ficha() (PDF "Entrega Ejercicio")
+    ├── extraer_recursos.py     # amplía el material desde PDFs exportados o capturas
+    └── ejemplo_tarea.py        # ejemplo completo: dibujo + ficha
+tareas-camellot.zip             # la misma carpeta comprimida, lista para subir a Claude
 ```
+
+Para usar los scripts fuera de Claude: `pip install pymupdf matplotlib pillow numpy` (y `opencv-python-headless` para `extraer_recursos.py limpiar`).
 
 ## Aviso
 
-Proyecto personal, sin relación con la RFEF ni con la plataforma Camellot. Los nombres de la plataforma se usan solo para describir el formato. Revisa siempre la ficha antes de entregarla.
+Proyecto personal y de uso privado, sin relación con la RFEF ni con la plataforma Camellot. El material gráfico incluido pertenece a sus propietarios. Revisa siempre la ficha antes de entregarla.
