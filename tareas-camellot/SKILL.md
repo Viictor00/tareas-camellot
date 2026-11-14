@@ -31,7 +31,7 @@ tareas-camellot/
 └── scripts/camellot.py, extraer_recursos.py, ejemplo_tarea.py
 ```
 
-Uso: `sys.path.insert(0, '<ruta de la skill>/scripts')` y `from camellot import Lienzo, ficha`; los scripts encuentran solos los fondos, las fichas, la plantilla y la fuente (o los de otra carpeta con la variable de entorno `CAMELLOT_KIT`). Los archivos de salida se escriben en el directorio de trabajo, nunca dentro de la skill. No hace falta pedir capturas ni PDFs al usuario; solo **la tarea**: captura/PDF de la otra app o descripción, y si es posible espacio y tiempo.
+Uso: `sys.path.insert(0, '<ruta de la skill>/scripts')` y `from camellot import Lienzo, ficha`; los scripts encuentran solos los fondos, las fichas, la plantilla y la fuente, estén en sus subcarpetas o todos sueltos junto a `camellot.py` (o los de otra carpeta con la variable de entorno `CAMELLOT_KIT`). Si `camellot.py` está suelto en la raíz de la skill, `sys.path.insert(0, '<ruta de la skill>')`. Los archivos de salida se escriben en el directorio de trabajo, nunca dentro de la skill. No hace falta pedir capturas ni PDFs al usuario; solo **la tarea**: captura/PDF de la otra app o descripción, y si es posible espacio y tiempo.
 
 **Fichas que faltan** (portería grande, cono grande, pica, valla, escalera, maniquí): pedir una captura sobre el verde de la app o una ficha exportada que la lleve y recortarla con `scripts/extraer_recursos.py` (ver abajo); guardarla junto al resto en la carpeta de trabajo y avisar al usuario para que la añada a la skill. Mientras tanto se puede dibujar con matplotlib imitando el estilo (y avisar).
 

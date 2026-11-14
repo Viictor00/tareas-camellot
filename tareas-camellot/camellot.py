@@ -16,12 +16,22 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 from PIL import Image
 
-# Carpeta del kit: la variable de entorno CAMELLOT_KIT o, por defecto, la carpeta padre de scripts/
-KIT = os.environ.get('CAMELLOT_KIT') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FONDOS = os.path.join(KIT, 'fondos')
-FICHAS = os.path.join(KIT, 'fichas')
-PLANTILLA = os.path.join(KIT, 'plantilla', 'plantilla_entrega_ejercicio.pdf')
-FUENTE = os.path.join(KIT, 'fuentes', 'Figtree-Regular.ttf')
+# Los recursos se buscan en la carpeta del kit (variable de entorno CAMELLOT_KIT o la carpeta padre de scripts/),
+# tanto en subcarpetas (fondos/, fichas/, plantilla/, fuentes/) como todos sueltos en la misma carpeta que este script.
+_AQUI = os.path.dirname(os.path.abspath(__file__))
+KIT = os.environ.get('CAMELLOT_KIT') or os.path.dirname(_AQUI)
+
+
+def ruta(sub, nombre):
+    for d in (os.path.join(KIT, sub), KIT, os.path.join(_AQUI, sub), _AQUI, os.path.join(os.path.dirname(_AQUI), sub)):
+        p = os.path.join(d, nombre)
+        if os.path.exists(p):
+            return p
+    raise FileNotFoundError(f'No encuentro {nombre} (buscado en {KIT} y {_AQUI}, con y sin la subcarpeta {sub}/)')
+
+
+PLANTILLA = ruta('plantilla', 'plantilla_entrega_ejercicio.pdf')
+FUENTE = ruta('fuentes', 'Figtree-Regular.ttf')
 
 # Fondos del kit: archivo, caja de líneas (px), radio de jugador (px) y máscara de esquinas.
 FONDO = {
@@ -42,7 +52,7 @@ class Lienzo:
     def __init__(self, fondo='medio'):
         cfg = FONDO[fondo]
         self.base, self.cfg = fondo, cfg
-        im = Image.open(os.path.join(FONDOS, cfg['png'])).convert('RGB')
+        im = Image.open(ruta('fondos', cfg['png'])).convert('RGB')
         self.W, self.H = im.size
         self.box, self.r, self.tf = cfg['box'], cfg['r'], None
         self.fig = plt.figure(figsize=(self.W / 100, self.H / 100), dpi=100)
@@ -60,7 +70,7 @@ class Lienzo:
         return b[0] + u * (b[2] - b[0]), b[1] + v * (b[3] - b[1])
 
     def _paste(self, name, cx, cy, w=None, h=None, rot=0, z=6):
-        im = Image.open(os.path.join(FICHAS, name + '.png')).convert('RGBA')
+        im = Image.open(ruta('fichas', name + '.png')).convert('RGBA')
         if rot:
             im = im.rotate(rot, expand=True, resample=Image.BICUBIC)
         iw, ih = im.size
@@ -109,7 +119,7 @@ class Lienzo:
         self.fig.savefig(path, dpi=100); plt.close(self.fig)
         if self.cfg['mask']:   # esquinas transparentes, como exporta la plataforma el medio campo
             im = Image.open(path).convert('RGB').resize((self.W, self.H))
-            im.putalpha(Image.open(os.path.join(FONDOS, self.cfg['mask'])).convert('L')); im.save(path)
+            im.putalpha(Image.open(ruta('fondos', self.cfg['mask'])).convert('L')); im.save(path)
 
 
 # ---------------------------------------------------------------- ficha PDF
